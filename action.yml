@@ -24,6 +24,10 @@ inputs:
   create_if_not_exists:
     description: 'Whether a comment should be created even if comment_tag is not found.'
     default: 'true'
+  repo_name:
+    description: 'The name of the repository used to find the pull request'
+  repo_owner:
+    description: 'The owner of the repository used to find the pull request'
 runs:
   using: 'node16'
   main: 'lib/index.js'

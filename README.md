@@ -3,7 +3,8 @@
 ## What is it ?
 
 A GitHub action that comments with a given message the pull request linked to the pushed branch.
-You can even put dynamic data thanks to [Contexts and expression syntax](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions).
+You can even put dynamic data thanks
+to [Contexts and expression syntax](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions).
 
 ## Usage
 
@@ -30,7 +31,7 @@ jobs:
 ### Comment a file content
 
 Thanks to the `filePath` input, a file content can be commented.
-You can either pass an absolute filePath or a relative one that will be by default retrieved from `GITHUB_WORKSPACE`. 
+You can either pass an absolute filePath or a relative one that will be by default retrieved from `GITHUB_WORKSPACE`.
 (Note that if both a `message` and `filePath` are provided, `message` will take precedence.)
 
 ```yml
@@ -40,11 +41,11 @@ You can either pass an absolute filePath or a relative one that will be by defau
     filePath: /path/to/file.txt
 ```
 
-
 ### Setting reactions
 
 You can also set some reactions on your comments through the `reactions` input.
-It takes only valid reactions and adds it to the comment you've just created. (See https://docs.github.com/en/rest/reactions#reaction-types)
+It takes only valid reactions and adds it to the comment you've just created. (
+See https://docs.github.com/en/rest/reactions#reaction-types)
 
 ```yml
 - name: PR comment with reactions
@@ -70,15 +71,15 @@ That is particularly useful for manual workflow for instance (`workflow_run`).
     pr_number: 123 # This will comment on pull request #123
 ```
 
-
 ### Update a comment
 
 Editing an existing comment is also possible thanks to the `comment_tag` input.
 
-Thanks to this parameter, it will be possible to identify your comment and then to upsert on it. 
+Thanks to this parameter, it will be possible to identify your comment and then to upsert on it.
 If the comment is not found at first, it will create a new comment.
 
-_That is particularly interesting while committing multiple times in a PR and that you just want to have the last execution report printed. It avoids flooding the PR._
+_That is particularly interesting while committing multiple times in a PR and that you just want to have the last
+execution report printed. It avoids flooding the PR._
 
 ```yml
 ...
@@ -92,20 +93,22 @@ _That is particularly interesting while committing multiple times in a PR and th
 
 Note: the input `mode` can be used to either `upsert` (by default) or `recreate` the comment (= delete and create)
 
-## Inputs 
+## Inputs
 
 ### Action inputs
 
-| Name | Description | Required | Default |
-| --- | --- | --- | --- |
-| `GITHUB_TOKEN` | Token that is used to create comments. Defaults to ${{ github.token }} | ✅ | |
-| `message` | Comment body | | |
-| `filePath` | Path of the file that should be commented | | |
-| `reactions` | List of reactions for the comment (comma separated). See https://docs.github.com/en/rest/reactions#reaction-types  | | |
-| `pr_number` | The number of the pull request where to create the comment | | current pull-request/issue number (deduced from context) |
-| `comment_tag` | A tag on your comment that will be used to identify a comment in case of replacement | | |
-| `mode` | Mode that will be used to update comment (upsert/recreate) | | upsert |
-| `create_if_not_exists` | Whether a comment should be created even if `comment_tag` is not found | | true |
+| Name                   | Description                                                                                                       | Required | Default                                                  |
+|------------------------|-------------------------------------------------------------------------------------------------------------------|----------|----------------------------------------------------------|
+| `GITHUB_TOKEN`         | Token that is used to create comments. Defaults to ${{ github.token }}                                            | ✅        |                                                          |
+| `message`              | Comment body                                                                                                      |          |                                                          |
+| `filePath`             | Path of the file that should be commented                                                                         |          |                                                          |
+| `reactions`            | List of reactions for the comment (comma separated). See https://docs.github.com/en/rest/reactions#reaction-types |          |                                                          |
+| `pr_number`            | The number of the pull request where to create the comment                                                        |          | current pull-request/issue number (deduced from context) |
+| `comment_tag`          | A tag on your comment that will be used to identify a comment in case of replacement                              |          |                                                          |
+| `mode`                 | Mode that will be used to update comment (upsert/recreate)                                                        |          | upsert                                                   |
+| `create_if_not_exists` | Whether a comment should be created even if `comment_tag` is not found                                            |          | true                                                     |
+| `repo_name`            | The name of the repository used to find the pull request                                                          |          | current repository name (deduced from context)           |
+| `repo_owner`           | The owner of the repository used to find the pull request                                                         |          | current repository owner (deduced from context)          |
 
 ## Contributing
 

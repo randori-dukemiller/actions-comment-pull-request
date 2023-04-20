@@ -18,6 +18,8 @@ async function run() {
     const reactions: string = core.getInput('reactions');
     const mode: string = core.getInput('mode');
     const create_if_not_exists: boolean = core.getInput('create_if_not_exists') === 'true';
+    const repo_owner: string = core.getInput('repo_owner')
+    const repo_name: string = core.getInput('repo_name')
 
     if (!message && !filePath) {
       core.setFailed('Either "filePath" or "message" should be provided as input');
@@ -31,6 +33,10 @@ async function run() {
 
     const context = github.context;
     const issue_number = parseInt(pr_number) || context.payload.pull_request?.number || context.payload.issue?.number;
+    const repository = {
+      owner: repo_owner || context.repo.owner,
+      repo: repo_name || context.repo.repo
+    }
 
     const octokit = github.getOctokit(github_token);
 
@@ -48,7 +54,7 @@ async function run() {
       await Promise.allSettled(
         validReactions.map(async (content) => {
           await octokit.rest.reactions.createForIssueComment({
-            ...context.repo,
+            ...repository,
             comment_id,
             content,
           });
@@ -67,7 +73,7 @@ async function run() {
       >;
       let comment: ListCommentsResponseDataType[0] | undefined;
       for await (const { data: comments } of octokit.paginate.iterator(octokit.rest.issues.listComments, {
-        ...context.repo,
+        ...repository,
         issue_number,
       })) {
         comment = comments.find((comment) => comment?.body?.includes(comment_tag_pattern));
@@ -77,7 +83,7 @@ async function run() {
       if (comment) {
         if (mode === 'upsert') {
           await octokit.rest.issues.updateComment({
-            ...context.repo,
+            ...repository,
             comment_id: comment.id,
             body,
           });
@@ -85,12 +91,12 @@ async function run() {
           return;
         } else if (mode === 'recreate') {
           await octokit.rest.issues.deleteComment({
-            ...context.repo,
+            ...repository,
             comment_id: comment.id,
           });
 
           const { data: newComment } = await octokit.rest.issues.createComment({
-            ...context.repo,
+            ...repository,
             issue_number,
             body,
           });
@@ -112,7 +118,7 @@ async function run() {
     }
 
     const { data: comment } = await octokit.rest.issues.createComment({
-      ...context.repo,
+      ...repository,
       issue_number,
       body,
     });
